@@ -4,9 +4,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jdk.nashorn.internal.parser.JSONParser;
+import main.Controller;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_6455;
@@ -18,6 +20,7 @@ import org.json.JSONObject;
 import wsClient.InHouseDetails;
 
 public class WSClient extends WebSocketClient {
+    Controller controller;
 
     public WSClient(URI serverUri, Draft draft) {
         super(serverUri, draft);
@@ -25,6 +28,10 @@ public class WSClient extends WebSocketClient {
 
     public WSClient(URI serverURI) {
         super(serverURI);
+    }
+
+    public void setController(Controller controller){
+        this.controller = controller;
     }
 
     @Override
@@ -48,6 +55,7 @@ public class WSClient extends WebSocketClient {
                 InHouseDetails.solved_board =  JSONArrayToArray2D(myJSON.getJSONArray("solved_board"));
                 InHouseDetails.id =  myJSON.getString("_id");
                 InHouseDetails.players =  JSONArrayToArray(myJSON.getJSONArray("players"));
+                this.controller.drawValuesToGrid();
 
             } else if (response.equals("INVALID_GAME_CODE")){
                 System.out.println("alert error");

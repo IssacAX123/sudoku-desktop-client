@@ -32,9 +32,6 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 990, 620));
         primaryStage.show();
-
-
-
     }
     public void startScreen(Group root){
         Label title = new Label("Sudoku Online:- Single or Multiplayer");
@@ -90,6 +87,7 @@ public class Main extends Application {
     public void init() throws Exception{
         ws = new WSClient(new URI("ws://localhost:80"));
         controller = new Controller(ws);
+        ws.setController(controller);
         ws.connect();
     }
 
