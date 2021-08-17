@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 import jdk.nashorn.internal.parser.JSONParser;
 import org.java_websocket.client.WebSocketClient;
@@ -42,14 +43,12 @@ public class WSClient extends WebSocketClient {
             JSONObject myJSON = new JSONObject(message);
             String response = myJSON.getString("response");
             if (response.equals("GAME_JSON")){
-                InHouseDetails.og_board =  (int[][]) myJSON.get("og_board");
-                InHouseDetails.playing_board =  (int[][]) myJSON.get("playing_board");
-                InHouseDetails.solved_board =  (int[][]) myJSON.get("solved_board");
+                InHouseDetails.og_board =   JSONArrayToArray2D(myJSON.getJSONArray("og_board"));
+                InHouseDetails.playing_board =  JSONArrayToArray2D(myJSON.getJSONArray("playing_board"));
+                InHouseDetails.solved_board =  JSONArrayToArray2D(myJSON.getJSONArray("solved_board"));
                 InHouseDetails.id =  myJSON.getString("_id");
-                JSONArray JSONArrayPlayers =  myJSON.getJSONArray("players");
-                for (int i = 0; i< JSONArrayPlayers.length(); i++){
-                    InHouseDetails.players.add(JSONArrayPlayers.getString(i));
-                }
+                InHouseDetails.players =  JSONArrayToArray(myJSON.getJSONArray("players"));
+
             } else if (response.equals("INVALID_GAME_CODE")){
                 System.out.println("alert error");
             } else if (response.equals("INNIT")){
@@ -66,6 +65,25 @@ public class WSClient extends WebSocketClient {
             System.out.println("JSON Loading Error");
         }
     }
+
+    public int[][] JSONArrayToArray2D(JSONArray jsonArray){
+        int[][] chosen = new int[9][9];
+        for (int r = 0; r< jsonArray.length(); r++){
+            for (int c = 0; c< jsonArray.getJSONArray(r).length(); c++){
+                chosen[r][c] = jsonArray.getJSONArray(r).getInt(c);
+            }
+        }
+        return chosen;
+    }
+
+    public ArrayList<String> JSONArrayToArray(JSONArray jsonArray){
+        ArrayList<String> chosen = new ArrayList<String>();
+        for (int i = 0; i< jsonArray.length(); i++){
+            chosen.add(jsonArray.getString(i));
+        }
+        return chosen;
+    }
+
 
     @Override
     public void onError(Exception ex) {
