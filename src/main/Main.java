@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import org.java_websocket.enums.ReadyState;
 import main.Controller;
 
 import java.io.IOException;
@@ -33,7 +34,9 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 990, 620));
         primaryStage.show();
     }
-    public void startScreen(Group root){
+
+
+    public static void startScreen(Group root){
         Label title = new Label("Sudoku Online:- Single or Multiplayer");
         title.setFont(Font.font("Nexa", FontWeight.BOLD, 36));
         title.setLayoutX(175);
@@ -75,6 +78,18 @@ public class Main extends Application {
         joinGameBtn.setStyle("-fx-text-fill: white; -fx-background-color: blue");
         joinGameBtn.setLayoutX(525);
         joinGameBtn.setLayoutY(330);
+        joinGameBtn.setOnAction(new EventHandler<ActionEvent>(){
+
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    String code = codeTextField.getText();
+                    Main.controller.joinGame(event, code);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         root.getChildren().add(joinGameBtn);
     }
     //create game
@@ -88,7 +103,12 @@ public class Main extends Application {
         ws = new WSClient(new URI("ws://localhost:80"));
         controller = new Controller(ws);
         ws.setController(controller);
-        ws.connect();
+        ws.connectBlocking();
+        while (ws.getReadyState()==ReadyState.NOT_YET_CONNECTED || ws.getReadyState()==ReadyState.CLOSED){
+            ws.reconnectBlocking();
+        }
+
+
     }
 
     public static void main(String[] args) {

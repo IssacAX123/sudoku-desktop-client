@@ -11,5 +11,5 @@ public class InHouseDetails {
     public static int[][] playing_board;
     public static int[][] og_board;
     public static ArrayList<String> players;
-    public static HashMap<Integer, List<Integer>> errors = new HashMap<>();
+    public static HashMap<Integer, ArrayList<ArrayList<Integer>>> errors = new HashMap<>();
 }
