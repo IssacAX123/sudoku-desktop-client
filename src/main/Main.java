@@ -107,8 +107,11 @@ public class Main extends Application {
         while (ws.getReadyState()==ReadyState.NOT_YET_CONNECTED || ws.getReadyState()==ReadyState.CLOSED){
             ws.reconnectBlocking();
         }
+    }
 
-
+    @Override
+    public void stop(){
+        ws.close();
     }
 
     public static void main(String[] args) {
