@@ -85,9 +85,21 @@ public class WSClient extends WebSocketClient {
         }
         else if (response.equals("NEW_PLAYER")){
             InHouseDetails.players.add(myJSON.getString("name"));
+            Platform.runLater(new Runnable(){
+                @Override
+                public void run() {
+                    controller.setPlayers("players: " + InHouseDetails.players.size());
+                }
+            });
         }
         else if (response.equals("PLAYER_DISCONNECTED")){
             InHouseDetails.players.remove(myJSON.getString("name"));
+            Platform.runLater(new Runnable(){
+                @Override
+                public void run() {
+                    controller.setPlayers("players: " + InHouseDetails.players.size());
+                }
+            });
         }
         else if (response.equals("ERRORS")){
             ArrayList<Integer> changeLocation = JSONArrayToIntArray(myJSON.getJSONArray("changed_location"));

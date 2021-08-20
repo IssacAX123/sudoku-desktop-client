@@ -29,6 +29,7 @@ public class Controller {
     WSClient ws;
     TextField[][] allTextFields;
     public Label codeLabel;
+    public Label playersLabel;
 
 
     public Controller(WSClient ws) {
@@ -44,6 +45,9 @@ public class Controller {
 
     public void setCode(String code){
         codeLabel.setText(code);
+    }
+    public void setPlayers(String code){
+        playersLabel.setText(code);
     }
 
     public void joinGame(ActionEvent event, String code) throws IOException {
@@ -133,6 +137,12 @@ public class Controller {
             }
         });
         root.getChildren().add(ExitGameBtn);
+
+        playersLabel = new Label("players: 1");
+        root.getChildren().add(playersLabel);
+        playersLabel.setFont(Font.font("sans-serif", 15));
+        playersLabel.setLayoutX(15);
+        playersLabel.setLayoutY(10);
 
         Button checkGameBtn = new Button("Check");
         checkGameBtn.setId("checkGameBtn");
